@@ -5,7 +5,9 @@ services:
     build: .
     ports:
       - "8000:8000"
+      - "9000:9000"
     volumes:
       - ./app:/code/app
+      - ./data/shadowsocks.db:/app/shadowsocks.db
     env_file:
       - .env
