@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  shadowsocks-obfs:
+    build: .
+    container_name: shadowsocks-server-obfs-92
+    ports:
+      - "8392:8392"
+    volumes:
+      - ./config.json:/etc/shadowsocks-libev/config.json
+    restart: unless-stopped
+    
+    
