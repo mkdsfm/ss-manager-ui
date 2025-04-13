@@ -27,20 +27,23 @@ jobs:
 
       - name: Generate OpenAPI schema
         run: |
-            python -c "
-              import json
-              from api.app.main import app
-              with open('docs/openapi.json', 'w') as f:
-                  json.dump(app.openapi(), f, indent=2)
-              "
+          python -c "
+          import json
+          from api.app.main import app
+          with open('docs/openapi.json', 'w') as f:
+              json.dump(app.openapi(), f, indent=2)
+          "
 
       - name: Run script to generate README
         run: python docs/generate_readme.py
 
+      - name: Fetch full history to compare with remote
+        run: git fetch origin main
+
       - name: Check for actual changes compared to origin/main
         id: readme-check
         run: |
-          if git diff --quiet origin/main -- README.md; then
+          if git diff --quiet origin/main -- README.md docs/openapi.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
