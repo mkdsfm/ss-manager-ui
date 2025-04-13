@@ -23,18 +23,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          
-      - name: Generate README.md
-        run: python docs/generate_readme.py
-
-      - name: Check if README.md was modified
-        run: |
-          git status
-
-      - name: Set working directory
-        working-directory: ./ss-manager-ui  # если структура nested
-        run: |
-          git add README.md
 
       - name: Create a new branch
         run: |
@@ -42,8 +30,9 @@ jobs:
           git checkout -b "$BRANCH"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          python docs/generate_readme.py
           git add README.md
-          git commit -m "docs: update README with changelog and OpenAPI" || exit 0
+          git commit -m "docs: update README with changelog and OpenAPI" || echo "No changes to commit"
           git push origin "$BRANCH"
           echo "branch_name=$BRANCH" >> $GITHUB_ENV
 
