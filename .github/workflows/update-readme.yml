@@ -25,6 +25,15 @@ jobs:
         with:
           python-version: '3.10'
 
+      - name: Generate OpenAPI schema
+        run: |
+            python -c "
+              import json
+              from api.app.main import app
+              with open('docs/openapi.json', 'w') as f:
+                  json.dump(app.openapi(), f, indent=2)
+              "
+
       - name: Run script to generate README
         run: python docs/generate_readme.py
 
@@ -40,7 +49,7 @@ jobs:
       - name: Add changes to git and commit
         if: steps.readme-check.outputs.changed == 'true'
         run: |
-          git add README.md
+          git add README.md docs/openapi.json
           git commit -m "chore(docs): update README" || echo "No changes to commit"
           git push origin HEAD
 

@@ -12,18 +12,41 @@ router = APIRouter(prefix="/api/shadowsocks", tags=["Shadowsocks"])
 
 @router.get("/{port}")
 def get_by_port(port: int ,  db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    """
+    
+    Получить подключение shadowsocks по порту
+    
+    Args:
+        port (int): порт подключения
+
+    """
+
     existing_connection = db.query(ShadowsocksConnection).filter(ShadowsocksConnection.server_port == port).first()
 
     return existing_connection
 
 @router.get("all")
 def all(db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    """
+    
+    Получить все подключения shadowsocks
+
+    """
+     
     existing_connection = db.query(ShadowsocksConnection).all()
     
     return existing_connection
 
 @router.post("/{port}", status_code=status.HTTP_201_CREATED)
 def create(port: int , db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    """
+    
+    Создать подключение shadowsocks
+
+    Args:
+        port (int): порт подключения
+
+    """
     
     # Проверка, существует ли уже подключение на этом порту
     existing_connection = db.query(ShadowsocksConnection).filter(ShadowsocksConnection.server_port == port).first()
@@ -72,6 +95,15 @@ def create(port: int , db: Session = Depends(get_db), user: str = Depends(get_cu
 
 @router.patch("/{port}/enable")
 def enable(port: int, enable: bool, db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    """
+    
+    Изменить доступность сервера shadowsocks по порту
+    
+    Args:
+        port (int): порт подключения
+
+    """
+        
     connection = db.query(ShadowsocksConnection).filter(ShadowsocksConnection.server_port == port).first()
     if not connection:
         raise HTTPException(status_code=400, detail="Connection not found")
@@ -115,6 +147,14 @@ def enable(port: int, enable: bool, db: Session = Depends(get_db), user: str = D
 
 @router.delete("/{port}")
 def delete(port: int , db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    """
+    
+    Удалить сервера shadowsocks по порту
+    
+    Args:
+        port (int): порт подключения
+
+    """
 
     connection = db.query(ShadowsocksConnection).filter(ShadowsocksConnection.server_port == port).first()
     if not connection or not connection.pid:
