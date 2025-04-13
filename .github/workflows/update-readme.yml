@@ -31,6 +31,11 @@ jobs:
         run: |
           git status
 
+      - name: Set working directory
+        working-directory: ./ss-manager-ui  # если структура nested
+        run: |
+          git add README.md
+
       - name: Create a new branch
         run: |
           BRANCH="update-docs-$(date +%s)"
