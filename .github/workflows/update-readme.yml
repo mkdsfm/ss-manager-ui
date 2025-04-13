@@ -29,14 +29,16 @@ jobs:
         run: |
             pip install -r api/requirements.txt
 
-      - name: Generate OpenAPI schema
-        run: |
-          python -c "
-          import json
-          from api.app.main import app
-          with open('docs/openapi.json', 'w') as f:
-              json.dump(app.openapi(), f, indent=2)
-          "
+            - name: Generate OpenAPI schema
+            env:
+              PYTHONPATH: ./api
+            run: |
+              python -c "
+              import json
+              from app.main import app
+              with open('docs/openapi.json', 'w') as f:
+                  json.dump(app.openapi(), f, indent=2)
+              "
 
       - name: Run script to generate README
         run: python docs/generate_readme.py
