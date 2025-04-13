@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from fastapi import status
 from app.shadowsocks_process_manager.manager import start_shadowsocks_connection, stop_shadowsocks_connection
 
-router = APIRouter(prefix="/shadowsocks", tags=["Shadowsocks"])
+router = APIRouter(prefix="/api/shadowsocks", tags=["Shadowsocks"])
 
 @router.get("/{port}")
 def get_by_port(port: int ,  db: Session = Depends(get_db), user: str = Depends(get_current_user)):
