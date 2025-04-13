@@ -48,7 +48,7 @@ def generate_readme(template_path, output_path, openapi_path, changelog_path):
 if __name__ == "__main__":
     generate_readme(
         BASE_DIR / "README.template.md",
-        BASE_DIR.parent / "README.md",
+        "README.md",
         BASE_DIR / "openapi.json",
-        BASE_DIR.parent / "CHANGELOG.md"
+        "CHANGELOG.md"
     )
