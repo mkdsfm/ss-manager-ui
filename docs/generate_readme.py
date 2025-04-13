@@ -24,11 +24,26 @@ def generate_readme(template_path, output_path, openapi_path, changelog_path):
     api_doc = extract_openapi_doc(openapi_path)
     changelog = extract_changelog(changelog_path)
 
+    print("API documentation extracted:")
+    print(api_doc[:500])  # выводим первые 500 символов
+
+    print("Changelog extracted:")
+    print(changelog[:500])  # выводим первые 500 символов
+
+    if not api_doc and not changelog:
+        print("Warning: No API documentation or changelog data found.")
+
     result = (
         template.replace("{{OPENAPI_DOC}}", api_doc)
                 .replace("{{CHANGELOG}}", changelog)
     )
+    
+    # Проверка: если result пустой, выводим сообщение
+    if not result:
+        print("Warning: Generated README.md is empty.")
+    
     Path(output_path).write_text(result, encoding='utf-8')
+    print(f"README.md has been written to {output_path}")
 
 if __name__ == "__main__":
     generate_readme(
