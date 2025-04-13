@@ -33,11 +33,9 @@ jobs:
       - name: Check for actual changes compared to origin/main
         id: readme-check
         run: |
-          if git diff origin/main -- README.md --quiet; then
-            echo "No changes in README compared to origin/main"
+          if git diff --quiet origin/main -- README.md; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
-            echo "Changes detected in README"
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
