@@ -36,6 +36,7 @@ def create(port: int , db: Session = Depends(get_db), user: str = Depends(get_cu
         server_port=port,
         password="password",
         method="chacha20-ietf-poly1305",
+        plugin = "obfs-server",
         plugin_opts="obfs=http;failover=204.79.197.200:80",
         status="pending",
         enable=True
@@ -97,7 +98,6 @@ def enable(port: int, enable: bool, db: Session = Depends(get_db), user: str = D
             db.commit()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Shadowsocks connection exception {ex}")
         
-        # TODO добавить проверку статуса
         connection.status = "running"
         connection.pid = pid
         db.commit()

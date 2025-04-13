@@ -17,7 +17,7 @@ def start_shadowsocks_connection(config: dict) -> int:
         "--plugin", config["plugin"],
         "--plugin-opts", config["plugin_opts"],
         "-t", str(config["timeout"]),
-        "-u",  # для UDP поддержки
+        "-u",
         "-v"
     ]
 

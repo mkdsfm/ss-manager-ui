@@ -10,6 +10,7 @@ class ShadowsocksConnection(Base):
     server_port = Column(Integer, unique=True, index=True)
     password = Column(String)
     method = Column(String)
+    plugin = Column(String)
     plugin_opts = Column(String)
     status = Column(String)
     enable = Column(Boolean, default=False)

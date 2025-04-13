@@ -8,5 +8,3 @@ ShadowsocksConnection.metadata.create_all(bind=engine)
 app = FastAPI()
 
 app.include_router(shadowsocks_api.router)
-
-# TODO добавить воркер который актуализирует статусы
