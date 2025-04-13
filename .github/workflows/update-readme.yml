@@ -27,14 +27,14 @@ jobs:
       - name: Run script to generate README
         run: python docs/generate_readme.py
 
-      - name: Check for changes in README.md
-        id: git-check
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Fetch full history to compare with remote
+        run: git fetch origin main
 
-          if git diff --quiet README.md; then
-            echo "No changes in README"
+      - name: Check for actual changes compared to origin/main
+        id: readme-check
+        run: |
+          if git diff origin/main -- README.md --quiet; then
+            echo "No changes in README compared to origin/main"
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "Changes detected in README"
@@ -42,7 +42,7 @@ jobs:
           fi
 
       - name: Create new branch, commit and push
-        if: steps.git-check.outputs.changed == 'true'
+        if: steps.readme-check.outputs.changed == 'true'
         run: |
           BRANCH="update-readme-$(date +%s)"
           git checkout -b "$BRANCH"
@@ -52,7 +52,7 @@ jobs:
           echo "branch_name=$BRANCH" >> "$GITHUB_ENV"
 
       - name: Create Pull Request
-        if: steps.git-check.outputs.changed == 'true'
+        if: steps.readme-check.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
