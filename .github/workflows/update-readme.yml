@@ -35,7 +35,7 @@ jobs:
         run: |
           python -c "
           import json
-          from app.main import app
+          from app.core.fastapi import app
           with open('docs/openapi.json', 'w') as f:
               json.dump(app.openapi(), f, indent=2)
           "
