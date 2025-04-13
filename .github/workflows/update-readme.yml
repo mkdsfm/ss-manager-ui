@@ -24,10 +24,6 @@ jobs:
         with:
           python-version: '3.10'
           
-      - name: Generate OpenAPI JSON
-        run: |
-          curl http://localhost:8000/openapi.json -o docs/openapi.json || echo "{}" > docs/openapi.json
-
       - name: Generate README.md
         run: python docs/generate_readme.py
 
