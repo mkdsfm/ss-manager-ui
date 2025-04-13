@@ -2,7 +2,8 @@ name: Update README via PR
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -11,7 +12,7 @@ jobs:
 
     permissions:
       contents: write
-      pull-requests: write 
+      pull-requests: write
 
     steps:
       - name: Checkout repo
@@ -27,15 +28,6 @@ jobs:
       - name: Run script to generate README
         run: python docs/generate_readme.py
 
-      - name: Check git status
-        run: git status
-
-      - name: Display generated README content
-        run: cat README.md
-
-      - name: Fetch full history to compare with remote
-        run: git fetch origin main
-
       - name: Check for actual changes compared to origin/main
         id: readme-check
         run: |
@@ -45,18 +37,18 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Set up Git user
+      - name: Add changes to git and commit
+        if: steps.readme-check.outputs.changed == 'true'
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "chore(docs): update README" || echo "No changes to commit"
+          git push origin HEAD
 
-      - name: Create new branch, commit and push
+      - name: Create a new branch, commit and push
         if: steps.readme-check.outputs.changed == 'true'
         run: |
           BRANCH="update-readme-$(date +%s)"
           git checkout -b "$BRANCH"
-          git add README.md
-          git commit -m "chore(docs): update README"
           git push origin "$BRANCH"
           echo "branch_name=$BRANCH" >> "$GITHUB_ENV"
 
@@ -70,11 +62,7 @@ jobs:
           title: "Update README"
           body: "Automated update of README.md"
 
-      - name: Delete branch if exists and no changes
+      - name: Delete branch if no changes were made
         if: steps.readme-check.outputs.changed == 'false'
         run: |
-          BRANCH="update-readme-*"
-          git branch -r | grep "origin/$BRANCH" | while read remote_branch; do
-            branch_name=${remote_branch#origin/}
-            git push origin --delete "$branch_name"
-          done || true
+          echo "No changes detected, skipping branch creation."
