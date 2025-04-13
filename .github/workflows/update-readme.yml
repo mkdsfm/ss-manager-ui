@@ -17,8 +17,8 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-           token: ${{ secrets.GITHUB_TOKEN }}
-      
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -26,6 +26,12 @@ jobs:
 
       - name: Run script to generate README
         run: python docs/generate_readme.py
+
+      - name: Check git status
+        run: git status
+
+      - name: Display generated README content
+        run: cat README.md
 
       - name: Fetch full history to compare with remote
         run: git fetch origin main
@@ -41,8 +47,8 @@ jobs:
 
       - name: Set up Git user
         run: |
-            git config --global user.name "github-actions[bot]"
-            git config --global user.email "github-actions[bot]@users.noreply.github.com" 
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Create new branch, commit and push
         if: steps.readme-check.outputs.changed == 'true'
@@ -65,7 +71,7 @@ jobs:
           body: "Automated update of README.md"
 
       - name: Delete branch if exists and no changes
-        if: steps.git-check.outputs.changed == 'false'
+        if: steps.readme-check.outputs.changed == 'false'
         run: |
           BRANCH="update-readme-*"
           git branch -r | grep "origin/$BRANCH" | while read remote_branch; do
