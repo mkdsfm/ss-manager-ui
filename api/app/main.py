@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.controllers import shadowsocks_api
 from app.models.shadowsocks_connections import ShadowsocksConnection
-from app.database import engine
+from app.db.base import engine
 
 ShadowsocksConnection.metadata.create_all(bind=engine)
 

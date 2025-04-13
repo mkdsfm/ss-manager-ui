@@ -7,7 +7,7 @@ services:
       - "8000:8000"
       - "9000:9000"
     volumes:
-      - ./api/app:/app
-      - ./api/data/shadowsocks.db:/app/shadowsocks.db
+      # - ./api:/app
+      - ./api/data:/app/data
     env_file:
       - ./api/.env

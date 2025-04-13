@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends, Query
-from app.auth import get_current_user
+from app.core.auth import get_current_user
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.database import get_db
+from app.db.base import get_db
 from app.models.shadowsocks_connections import ShadowsocksConnection
 from fastapi.responses import JSONResponse
 from fastapi import status
-
 from app.shadowsocks_process_manager.manager import start_shadowsocks_connection, stop_shadowsocks_connection
 
 router = APIRouter(prefix="/shadowsocks", tags=["Shadowsocks"])
