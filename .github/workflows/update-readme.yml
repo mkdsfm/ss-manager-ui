@@ -14,36 +14,53 @@ jobs:
       pull-requests: write 
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.x'
 
-      - name: Create a new branch
+      - name: Run script to generate README
+        run: python docs/generate_readme.py
+
+      - name: Check for changes in README.md
+        id: git-check
         run: |
-          BRANCH="update-docs-$(date +%s)"
-          git checkout -b "$BRANCH"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          python docs/generate_readme.py
-          git add README.md
-          git commit -m "docs: update README with changelog and OpenAPI" || echo "No changes to commit"
-          git push origin "$BRANCH"
-          echo "branch_name=$BRANCH" >> $GITHUB_ENV
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: List branches
-        run: git branch -a
+          if git diff --quiet README.md; then
+            echo "No changes in README"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Changes detected in README"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create new branch, commit and push
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          BRANCH="update-readme-$(date +%s)"
+          git checkout -b "$BRANCH"
+          git add README.md
+          git commit -m "chore(docs): update README"
+          git push origin "$BRANCH"
+          echo "branch_name=$BRANCH" >> "$GITHUB_ENV"
 
       - name: Create Pull Request
+        if: steps.git-check.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ env.branch_name }}
-          title: "docs: update README from OpenAPI + Changelog"
-          body: "Автоматически сгенерированный PR для обновления README.md"
           base: main
+          branch: ${{ env.branch_name }}
+          title: "Update README"
+          body: "Automated update of README.md"
+
+      - name: Delete branch if exists and no changes
+        if: steps.git-check.outputs.changed == 'false'
+        run: |
+          BRANCH="update-readme-*"
+          git branch -r | grep "origin/$BRANCH" | while read remote_branch; do
+            branch_name=${remote_branch#origin/}
+            git push origin --delete "$branch_name"
+          done || true
