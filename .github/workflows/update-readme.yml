@@ -27,6 +27,10 @@ jobs:
       - name: Generate README.md
         run: python docs/generate_readme.py
 
+      - name: Check if README.md was modified
+        run: |
+          git status
+
       - name: Create a new branch
         run: |
           BRANCH="update-docs-$(date +%s)"
@@ -37,6 +41,9 @@ jobs:
           git commit -m "docs: update README with changelog and OpenAPI" || exit 0
           git push origin "$BRANCH"
           echo "branch_name=$BRANCH" >> $GITHUB_ENV
+
+      - name: List branches
+        run: git branch -a
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
