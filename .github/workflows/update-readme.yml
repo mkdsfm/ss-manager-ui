@@ -11,7 +11,7 @@ jobs:
 
     permissions:
       contents: write
-      pull-requests: write  # 👈 нужно для создания PR
+      pull-requests: write 
 
     steps:
       - name: Checkout repo
@@ -24,10 +24,14 @@ jobs:
         with:
           python-version: '3.10'
           
+      - name: Generate OpenAPI JSON
+        run: |
+          curl http://localhost:8000/openapi.json -o docs/openapi.json || echo "{}" > docs/openapi.json
+
       - name: Generate README.md
         run: python docs/generate_readme.py
 
-      - name: Create branch and commit
+      - name: Create a new branch
         run: |
           BRANCH="update-docs-$(date +%s)"
           git checkout -b "$BRANCH"
@@ -36,7 +40,6 @@ jobs:
           git add README.md
           git commit -m "docs: update README with changelog and OpenAPI" || exit 0
           git push origin "$BRANCH"
-
           echo "branch_name=$BRANCH" >> $GITHUB_ENV
 
       - name: Create Pull Request
