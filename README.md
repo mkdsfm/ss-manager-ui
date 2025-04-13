@@ -1,5 +1,3 @@
-# Мой проект
-
 ## Описание
 
 swagger url: http://localhost:8000/docs
