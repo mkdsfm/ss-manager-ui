@@ -2,12 +2,12 @@ version: "3.9"
 
 services:
   web:
-    build: .
+    build: ./api/
     ports:
       - "8000:8000"
       - "9000:9000"
     volumes:
-      - ./app:/code/app
-      - ./data/shadowsocks.db:/app/shadowsocks.db
+      - ./api/app:/app
+      - ./api/data/shadowsocks.db:/app/shadowsocks.db
     env_file:
-      - .env
+      - ./api/.env
