@@ -15,7 +15,7 @@ swagger url: http://localhost:8000/docs
 ### `DELETE /api/shadowsocks/{port}`
 - Delete
 
-### `GET /api/shadowsocksall`
+### `GET /api/shadowsocks/all`
 - All
 
 ### `PATCH /api/shadowsocks/{port}/enable`
