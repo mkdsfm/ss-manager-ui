@@ -11,7 +11,7 @@ from app.shadowsocks_process_manager.manager import start_shadowsocks_connection
 router = APIRouter(prefix="/api/shadowsocks", tags=["Shadowsocks"])
 
 @router.get("/{port}")
-def get_by_port(port: int ,  db: Session = Depends(get_db), user: str = Depends(get_current_user)) -> ShadowsocksConnection:
+def get_by_port(port: int ,  db: Session = Depends(get_db), user: str = Depends(get_current_user))
     """
     
     Получить подключение shadowsocks по порту
@@ -26,7 +26,7 @@ def get_by_port(port: int ,  db: Session = Depends(get_db), user: str = Depends(
     return existing_connection
 
 @router.get("/all")
-def all(db: Session = Depends(get_db), user: str = Depends(get_current_user)) -> list[ShadowsocksConnection]:
+def all(db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     """
     
     Получить все подключения shadowsocks
