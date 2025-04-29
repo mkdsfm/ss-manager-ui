@@ -1,13 +1,11 @@
-version: "3.9"
-
 services:
-  web:
+  ss-manager-api:
+    container_name: ss-manager-api
     build: ./api/
     ports:
       - "8000:8000"
-      - "9000:9000"
+      - "9000-9020:9000-9020"
     volumes:
-      # - ./api:/app
       - ./api/data:/app/data
     env_file:
       - ./api/.env
