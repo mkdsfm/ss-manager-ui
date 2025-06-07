@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str = os.getenv("DATABASE_URL", default="sqlite:///./data/shadowsocks.db")
 
     API_TITLE: str = "Shadowsocks Manager"
+
+    ROOT_PATH: str = "/ss-manager-api"
     
     ADMIN_USERNAME: str = os.getenv("ADMIN_USERNAME", default="admin")
     ADMIN_PASSWORD: str = os.getenv("ADMIN_PASSWORD", default="admin")
