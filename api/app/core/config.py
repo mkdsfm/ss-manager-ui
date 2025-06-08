@@ -11,7 +11,7 @@ class Settings(BaseSettings):
 
     API_TITLE: str = "Shadowsocks Manager"
 
-    ROOT_PATH: str = "/ss-manager-api"
+    ROOT_PATH: str = "/"
     
     ADMIN_USERNAME: str = os.getenv("ADMIN_USERNAME", default="admin")
     ADMIN_PASSWORD: str = os.getenv("ADMIN_PASSWORD", default="admin")
